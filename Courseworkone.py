@@ -42,27 +42,17 @@ def finalDigit(win,startX,startY,colour):#this is used for printing the final di
 
 def validateInput(sizeInput,colour1,colour2,colour3):#this function is for validating input in gatherInput()
     sizePass=0
-    #CHECK SIZE INPUT
+    colourPass = 0
     validSizes=[5,7,9,11]
-    if sizeInput != "":
-        if int(sizeInput) in validSizes:
-            sizePass=1
-        else:
-            pass
-    else:
-        pass
-    #CHECK COLOUR INPUT(S)
-    colourPass=0
     validColours = ["red", "green", "blue" , "magenta", "cyan",
                     "orange", "brown", "pink"]
-    colour1 = colour1.lower()
-    colour2 = colour2.lower()
-    colour3 = colour3.lower()
-    if colour1 in validColours and colour2 in validColours and colour3 in validColours:
+    if sizeInput != "" and int(sizeInput) in validSizes and\
+                    colour1 in validColours and colour2 in validColours and colour3 in validColours:
         if colour1==colour2 or colour1==colour3 or colour2==colour3:
             pass
         else:
             colourPass=1
+            sizePass=1
     else:
         pass
     #return if valid
@@ -84,7 +74,8 @@ def gatherInput(): #this function creates a new window and
     while inputLoop==1:
         p = win.getMouse()
         if p.getX() > 270 and p.getY() > 130:
-            if (validateInput(sizeInput.getText(),c1.getText(),c2.getText(),c3.getText())) =="valid":
+            if (validateInput(sizeInput.getText().lower(),c1.getText().lower(),
+                              c2.getText().lower(),c3.getText().lower())) =="valid":
                 inputLoop=0
                 win.close()
                 return int(sizeInput.getText()),c1.getText(),c2.getText(),c3.getText()
@@ -122,32 +113,31 @@ def main():
 
     #ADVANCED PROGRAM FEATURE
     while True:
-        p1 = win.getMouse()
+        p1 = win.getMouse()#GET FIRST MOUSE CLICK
         swapX1 = int(p1.getX() // 100)
         swapY1 = int(p1.getY() // 100)
         swapIndex1 = swapX1 + (swapY1 * windowSize)
 
-        p1 = win.getMouse()
+        p1 = win.getMouse()#GET SECOND MOUSE CLICK
         swapX2 = int(p1.getX() // 100)
         swapY2 = int(p1.getY() // 100)
         swapIndex2 = swapX2 + (swapY2 * windowSize)
 
-        blankSquare(win, swapX1 * 100, swapY1 * 100, swapX2 * 100, swapY2 * 100)
+        blankSquare(win, swapX1 * 100, swapY1 * 100, swapX2 * 100, swapY2 * 100)#BLANK CELLS
 
-        layout1 = gridLayout[swapIndex1]
+        layout1 = gridLayout[swapIndex1]#SAVE VARIABLES
         layout2 = gridLayout[swapIndex2]
         colour1 = colours[swapIndex1]
         colour2 = colours[swapIndex2]
-        #CHECKING IF CLICKED TWICE IN THE SAME CELL
-        if swapX1==swapX2 and swapY1==swapY2:
+
+        if swapX1==swapX2 and swapY1==swapY2:#CHECKING IF CLICKED TWICE IN THE SAME CELL
             if gridLayout[swapIndex1] == "f":
                 penultimate(win, swapX1 * 100, swapY1 * 100, colours[swapIndex1])
                 gridLayout[swapIndex1] = "p"
             else:
                 finalDigit(win, swapX1 * 100, swapY1 * 100, colours[swapIndex1])
                 gridLayout[swapIndex1] = "f"
-        #CLICKED IN DIFFERENT CELLS
-        else:
+        else:#CLICKED IN DIFFERENT CELLS
             if gridLayout[swapIndex2] == "f":
                 finalDigit(win, swapX1 * 100, swapY1 * 100, colours[swapIndex2])
                 gridLayout[swapIndex2] = layout1
@@ -156,7 +146,7 @@ def main():
                 penultimate(win, swapX1 * 100, swapY1 * 100, colours[swapIndex2])
                 gridLayout[swapIndex2] = layout1
                 colours[swapIndex2] = colour1
-
+                
             if gridLayout[swapIndex1] == "f":
                 finalDigit(win, swapX2 * 100, swapY2 * 100, colours[swapIndex1])
                 gridLayout[swapIndex1] = layout2
